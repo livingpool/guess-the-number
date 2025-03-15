@@ -1,8 +1,0 @@
- 
-	
-        <tr>
-            <td headers="timestamp">{{ .Time }}</td>
-            <td headers="guess">#1: 1022</td>
-            <td headers="result">1a2b</td>
-        </tr>
-	 

@@ -104,6 +104,7 @@ func (h *GameHandler) CheckGuess(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(playerId)
 	if err != nil {
 		w.WriteHeader(http.StatusNotFound)
+		w.Write([]byte("player id is not an integer"))
 		return
 	}
 
@@ -111,11 +112,13 @@ func (h *GameHandler) CheckGuess(w http.ResponseWriter, r *http.Request) {
 	player, exists := h.playerPool.GetPlayer(id)
 	if !exists {
 		w.WriteHeader(http.StatusNotFound)
-		slog.Error("player doesn't exist", "reqId", reqId, "playerId", id)
+		w.Write([]byte("player id not found"))
+		slog.Error("player id not found", "reqId", reqId, "playerId", id)
 		return
 	}
 
-	// Guess/Answer length not match error
+	// Guess/Answer length don't match, but as this is a valid user input, we still return the guess results
+	// at the frontend, a Swal error popup is generated for this.
 	if len(guessStr) != len(player.Answer) {
 		w.WriteHeader(http.StatusUnprocessableEntity)
 		h.renderer.Render(w, "result", player.GuessResults)
@@ -148,7 +151,7 @@ func genHint(guess, answer string) string {
 	}
 
 	// log.Println(guessStr, player.Answer)
-	for i := 0; i < len(guess); i++ {
+	for i := range len(guess) {
 		c, _ := strconv.Atoi(string(guess[i]))
 		if guess[i] == answer[i] {
 			if countMap[c] <= 0 {
