@@ -1,8 +1,7 @@
-package handler_test
+package handler
 
 import (
 	"context"
-	"html/template"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -10,7 +9,6 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Livingpool/handler"
 	"github.com/Livingpool/middleware"
 	"github.com/Livingpool/mocks"
 	"github.com/Livingpool/service"
@@ -23,39 +21,39 @@ func TestNewGame(t *testing.T) {
 	mockTemplates := mocks.NewMockTemplatesInterface(t)
 	mockPlayerPool := mocks.NewMockPlayerPoolInterface(t)
 	mockTimeProvider := mocks.NewMockTimeProviderInterface(t)
-	mockGameHandler := handler.NewGameHandler(mockTemplates, mockPlayerPool, mockTimeProvider)
+	mockGameHandler := NewGameHandler(mockTemplates, mockPlayerPool, mockTimeProvider)
 
 	testcases := []struct {
-		name       string
-		digit      string
-		statusCode int
+		name         string
+		digit        string
+		expectedCode int
+		expectedMsg  string
 	}{
-		{"alphabet_input", "a", 422},
-		{"non_alnum_input", "!", 422},
-		{"lower_than_range_input", "0", 422},
-		{"higher_than_range_input", "15", 422},
-		{"valid_input", "8", 200},
+		{"alphabet_input", "a", 422, "Input is not a digit"},
+		{"non_alnum_input", "!", 422, "Input is not a digit"},
+		{"lower_than_range_input", "0", 422, "Input is not in range"},
+		{"higher_than_range_input", "15", 422, "Input is not in range"},
+		{"valid_input", "8", 200, "8"},
 	}
-
-	mockTemplates.EXPECT().Render(
-		mock.AnythingOfType("*httptest.ResponseRecorder"),
-		mock.AnythingOfType("string"),
-		mock.AnythingOfType("service.FormData"),
-	).RunAndReturn(func(w io.Writer, name string, data interface{}) error {
-		funcMap := template.FuncMap{
-			"dec": func(i int) int { return i - 1 },
-		}
-		newTemplates := template.Must(template.New("test").Funcs(funcMap).ParseGlob("./../views/html/*.tmpl"))
-		newTemplates.ExecuteTemplate(w, name, data)
-		return nil
-	})
 
 	mockPlayerPool.EXPECT().NewPlayer(mock.AnythingOfType("string")).Return(new(service.Player))
 	mockPlayerPool.EXPECT().AddPlayer(mock.Anything).Return(nil)
-	// mockPlayerPool.EXPECT().GetPlayer(mock.AnythingOfType("int")).Return(new(service.Player), true)
-	// mockPlayerPool.EXPECT().RemovePlayer(mock.AnythingOfType("int")).Return(nil)
 
-	for _, tc := range testcases {
+	received := make([]service.FormData, 0, len(testcases))
+	mockTemplates.EXPECT().Render(
+		mock.Anything,
+		mock.AnythingOfType("string"),
+		mock.Anything,
+	).RunAndReturn(func(w io.Writer, tmpl string, data any) error {
+		formData, ok := data.(service.FormData)
+		if !ok {
+			t.Errorf("data is not service.FormData")
+		}
+		received = append(received, formData)
+		return nil
+	})
+
+	for i, tc := range testcases {
 		t.Run(tc.name, func(t *testing.T) {
 			w := httptest.NewRecorder()
 			r := httptest.NewRequest(http.MethodPost, "/home?digit="+tc.digit, nil)
@@ -64,74 +62,80 @@ func TestNewGame(t *testing.T) {
 
 			mockGameHandler.NewGame(w, r)
 
-			assert.Equal(t, tc.statusCode, w.Code)
+			assert.Equal(t, tc.expectedCode, w.Code)
+			if tc.expectedCode >= 400 {
+				assert.Contains(t, received[i].Error, tc.expectedMsg)
+			} else {
+				assert.Equal(t, strconv.Itoa(received[i].Digit), tc.expectedMsg)
+			}
 		})
 	}
 }
 
+func TestGenHint(t *testing.T) {
+	testcases := []struct {
+		guess    string
+		answer   string
+		expected string
+	}{
+		{"0", "1", "0a0b"},
+		{"1", "1", "1a0b"},
+		{"10", "11", "1a0b"},
+		{"12", "21", "0a2b"},
+		{"111", "111", "3a0b"},
+		{"22300", "00322", "1a4b"},
+		{"123456", "654321", "0a6b"},
+	}
+
+	for _, tc := range testcases {
+		actual := genHint(tc.guess, tc.answer)
+		assert.Equal(t, tc.expected, actual)
+	}
+}
+
+// this seems like a bit too much mocking tbf
 func TestCheckGuess(t *testing.T) {
 	mockTemplates := mocks.NewMockTemplatesInterface(t)
 	mockPlayerPool := mocks.NewMockPlayerPoolInterface(t)
 	mockTimeProvider := mocks.NewMockTimeProviderInterface(t)
-	mockGameHandler := handler.NewGameHandler(mockTemplates, mockPlayerPool, mockTimeProvider)
+	mockGameHandler := NewGameHandler(mockTemplates, mockPlayerPool, mockTimeProvider)
 
 	testcases := []struct {
-		name       string
-		guess      string
-		answer     string
-		playerId   string
-		result     string
-		statusCode int
+		name           string
+		guess          string
+		playerId       string
+		expectedResult string
+		expectedCode   int
+		expectedMsg    string
 	}{
-		{"empty_input", "", "123", "0", "", 422},
-		{"wrong_length_input", "12", "123", "0", "", 422},
-		{"wrong_id_format", "", "123", "a", "", 404},
-		{"correct_guess", "111", "111", "0", "3a0b", 200},
-		{"all_b", "1919", "9191", "0", "0a4b", 200},
-		{"mixed_a_b", "1022", "1201", "0", "1a2b", 200},
+		{"invalid_player_id", "", "a", "", 404, "player id is not an integer"},
+		{"player_id_not_found", "", "-1", "", 404, "player id not found"},
+		{"empty_guess", "", "1", "", 422, ""},
+		{"wrong_length_guess", "12", "0", "", 422, ""},
+		{"correct_guess", "111", "111", "3a0b", 200, ""},
 	}
-
-	mockTemplates.EXPECT().Render(
-		mock.AnythingOfType("*httptest.ResponseRecorder"),
-		mock.AnythingOfType("string"),
-		mock.AnythingOfType("service.GuessResults"),
-	).RunAndReturn(func(w io.Writer, name string, data interface{}) error {
-		funcMap := template.FuncMap{
-			"dec": func(i int) int { return i - 1 },
-		}
-		newTemplates := template.Must(template.New("test").Funcs(funcMap).ParseGlob("./../views/html/*.tmpl"))
-		newTemplates.ExecuteTemplate(w, name, data)
-		return nil
-	})
-
-	// i dunno why this failed...
-	// mockTemplates.On(
-	// 	"Render",
-	// 	mock.AnythingOfType("*httptest.ResponseRecorder"),
-	// 	mock.AnythingOfType("string"),
-	// 	mock.AnythingOfType("service.GuessResults"),
-	// ).Return(func(w io.Writer, name string, data interface{}) error {
-	// 	funcMap := template.FuncMap{
-	// 		"dec": func(i int) int { return i - 1 },
-	// 	}
-	// 	newTemplates := template.Must(template.New("example").Funcs(funcMap).ParseGlob("./../views/html/*.tmpl"))
-	// 	newTemplates.ExecuteTemplate(w, name, data)
-	// 	return nil
-	// }).Times(len(testcases))
 
 	mockTimeProvider.EXPECT().Now(mock.Anything).Return(time.Now())
 
-	for _, tc := range testcases {
-		if tc.statusCode != 404 {
-			newPlayer := new(service.Player)
-			newPlayer.Answer = tc.answer
-			newPlayer.Id, _ = strconv.Atoi(tc.playerId)
-			mockPlayerPool.On(
-				"GetPlayer",
-				newPlayer.Id,
-			).Return(newPlayer, true).Once()
-		}
-	}
+	// TODO: test template?
+	mockTemplates.EXPECT().Render(
+		mock.Anything,
+		mock.AnythingOfType("string"),
+		mock.Anything,
+	).RunAndReturn(func(w io.Writer, tmpl string, data any) error {
+		return nil
+	})
+
+	// i set playerId and answer to the same value so i can mock this easier
+	// so note that the testcases should follow this setting
+	mockPlayerPool.EXPECT().GetPlayer(mock.AnythingOfType("int")).RunAndReturn(
+		func(id int) (*service.Player, bool) {
+			if id >= 0 {
+				return &service.Player{Id: id, Answer: strconv.Itoa(id)}, true
+			}
+			return nil, false
+		},
+	)
 
 	for _, tc := range testcases {
 		t.Run(tc.name, func(t *testing.T) {
@@ -142,7 +146,10 @@ func TestCheckGuess(t *testing.T) {
 
 			mockGameHandler.CheckGuess(w, r)
 
-			assert.Equal(t, tc.statusCode, w.Code)
+			assert.Equal(t, tc.expectedCode, w.Code)
+			if tc.expectedCode >= 400 {
+				assert.Contains(t, w.Body.String(), tc.expectedMsg)
+			}
 		})
 	}
 }
