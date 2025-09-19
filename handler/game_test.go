@@ -9,10 +9,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Livingpool/middleware"
-	"github.com/Livingpool/mocks"
-	"github.com/Livingpool/service"
 	"github.com/google/uuid"
+	"github.com/livingpool/middleware"
+	"github.com/livingpool/mocks"
+	"github.com/livingpool/service"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )

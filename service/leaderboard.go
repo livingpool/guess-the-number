@@ -4,12 +4,13 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"log"
 	"math"
 	"os"
 
 	_ "github.com/tursodatabase/libsql-client-go/libsql"
 
-	"github.com/Livingpool/constants"
+	"github.com/livingpool/constants"
 )
 
 type LeaderboardInterface interface {
@@ -32,7 +33,7 @@ func NewLeaderboard() *Leaderboard {
 	url := os.Getenv("TURSO_DATABASE_URL") + "?authToken=" + os.Getenv("TURSO_AUTH_TOKEN")
 	db, err := sql.Open("libsql", url)
 	if err != nil {
-		panic(err)
+		log.Fatalf("error connecting to turso: %v", err)
 	}
 
 	var sqlStmt string
@@ -42,7 +43,7 @@ func NewLeaderboard() *Leaderboard {
 	}
 
 	if _, err = db.Exec(sqlStmt); err != nil {
-		panic(err)
+		log.Fatalf("error executing sql: %v", err)
 	}
 	return &Leaderboard{db}
 }

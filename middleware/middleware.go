@@ -7,8 +7,8 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/Livingpool/utils"
 	"github.com/google/uuid"
+	"github.com/livingpool/utils"
 )
 
 type LoggingConfig struct {

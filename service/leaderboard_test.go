@@ -8,8 +8,8 @@ import (
 
 	_ "github.com/mattn/go-sqlite3"
 
-	"github.com/Livingpool/constants"
-	"github.com/Livingpool/service"
+	"github.com/livingpool/constants"
+	"github.com/livingpool/service"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"

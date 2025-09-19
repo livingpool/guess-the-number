@@ -7,14 +7,15 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/Livingpool/middleware"
-	"github.com/Livingpool/router"
 	"github.com/joho/godotenv"
+	"github.com/livingpool/middleware"
+	"github.com/livingpool/router"
 )
 
 func main() {
 	if err := godotenv.Load(".env"); err != nil {
-		log.Fatal("Error loading .env file")
+		slog.Error("error loading .env file")
+		return
 	}
 
 	h := slog.NewJSONHandler(os.Stderr, &slog.HandlerOptions{})
@@ -35,7 +36,6 @@ func main() {
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "42069"
-		log.Printf("Defaulting to port %s\n", port)
 	}
 	port = ":" + port
 
@@ -44,6 +44,7 @@ func main() {
 		Handler: stack(router),
 	}
 
-	fmt.Println("Server listening on port", port)
+	slog.Info(fmt.Sprintf("server listening on port %s", port))
+
 	log.Fatal(server.ListenAndServe())
 }

@@ -18,18 +18,18 @@ type IpResponse struct {
 	Query    string `json:"query"`
 }
 
-// note that any security-related use of these headers
-// must only IP addresses added by a trusted proxy.
-// see https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Forwarded-For
+// Note that any security-related use of these headers
+// must only be IP addresses added by a trusted proxy.
+//
+// See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Forwarded-For.
 func ReadUserIP(r *http.Request) net.IP {
 	ip := r.Header.Get("X-Real-Ip")
 	if res := net.ParseIP(ip); res != nil {
 		return res
 	}
 
-	ips := strings.Split(r.Header.Get("X-Forwarded-For"), ", ")
-	for _, cand := range ips {
-		if res := net.ParseIP(cand); res != nil {
+	for ip := range strings.SplitSeq(r.Header.Get("X-Forwarded-For"), ", ") {
+		if res := net.ParseIP(ip); res != nil {
 			return res
 		}
 	}
@@ -45,7 +45,7 @@ func ReadUserIP(r *http.Request) net.IP {
 	return nil
 }
 
-// get geo location info from ip-api.com
+// Get geo location info from ip-api.com.
 func GetTimeZone(ip net.IP) string {
 	defaultZone := "Asia/Taipei"
 	if len(ip) == 0 {

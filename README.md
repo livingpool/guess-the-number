@@ -6,17 +6,17 @@ while ?b means there are ? numbers that are in the final answer but are misplace
 For example, if guess = 312 and the answer is 321, the hint would be 1a2b.
 
 <p align="center">
-<img height="400" width="320" alt="Screenshot 2024-05-31 at 5 14 29 PM" src="https://github.com/Livingpool/guess-the-number/assets/52132459/97dba180-16b1-4f25-b29c-48489c7b872f">
+<img height="400" width="320" alt="Screenshot 2024-05-31 at 5 14 29 PM" src="https://github.com/livingpool/guess-the-number/assets/52132459/97dba180-16b1-4f25-b29c-48489c7b872f">
 &nbsp;&nbsp;&nbsp;
-<img height="400" width="350" alt="Screenshot 2024-05-31 at 5 13 26 PM" src="https://github.com/Livingpool/guess-the-number/assets/52132459/704bee09-fcac-4242-8765-db64e18e7a59">
+<img height="400" width="350" alt="Screenshot 2024-05-31 at 5 13 26 PM" src="https://github.com/livingpool/guess-the-number/assets/52132459/704bee09-fcac-4242-8765-db64e18e7a59">
 </p>
 
 ### To run this project locally
-- i use [turso](https://turso.tech) as a serverless sql database. \
-if you wanna use sqlite instead, just swap out the first two lines of NewLeaderboard() and delete the env stuff in main.go \
-db testing uses sqlite btw.
+- I use [turso](https://turso.tech) as a serverless sql database.
+- To start the project, first make a copy of .env.example and name it .env. \
+  Make an account at turso and fill in the url and token in .env.
 
-- Old school way (Go version 1.22 or above is required):
+- Old school way (Go version 1.22+ is required):
 ```bash
 cd cmd
 go run .

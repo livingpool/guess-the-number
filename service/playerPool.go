@@ -4,7 +4,7 @@ import (
 	"errors"
 	"sync"
 
-	"github.com/Livingpool/constants"
+	"github.com/livingpool/constants"
 )
 
 type PlayerPoolInterface interface {

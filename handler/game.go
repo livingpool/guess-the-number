@@ -9,11 +9,11 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Livingpool/constants"
-	"github.com/Livingpool/middleware"
-	"github.com/Livingpool/service"
-	"github.com/Livingpool/utils"
-	"github.com/Livingpool/views"
+	"github.com/livingpool/constants"
+	"github.com/livingpool/middleware"
+	"github.com/livingpool/service"
+	"github.com/livingpool/utils"
+	"github.com/livingpool/views"
 )
 
 type GameHandler struct {

@@ -1,82 +1,108 @@
 {{ block "game" . }}
-    <div
-        id="form-container"
-        class="form-container"
-        data-digit="{{ .Digit }}"
-        name=""
+  <div
+    id="form-container"
+    class="form-container"
+    data-digit="{{ .Digit }}"
+    name=""
+  >
+    <h1>
+      Number of Digits:
+      <span style="color: darkorange">{{ .Digit }}</span>
+    </h1>
+    <h2>
+      Range: [<span style="color: green">{{ .Start }}</span>,
+      <span style="color: slateblue">{{ .End }}</span>]
+    </h2>
+
+    <!-- submit guess -->
+    <button
+      id="submit-btn"
+      class="submit-btn"
+      hx-get="/check"
+      hx-target="#table tbody"
+      hx-vals='{"id": "{{ .PlayerId }}"}'
     >
-        <h1>
-            Number of Digits:
-            <span style="color: darkorange">{{ .Digit }}</span>
-        </h1>
-        <h2>
-            Range: [<span style="color: green">{{ .Start }}</span>,
-            <span style="color: slateblue">{{ .End }}</span>]
-        </h2>
+      let's go!
+    </button>
 
-        <button
-            id="submit-btn"
-            class="submit-btn"
-            hx-get="/check"
-            hx-target="#table tbody"
-            hx-vals='{"id": "{{ .PlayerId }}"}'
-        >
-            let's go!
-        </button>
+    <!-- TODO: on mobile: this is shown as a popup -->
+    <table id="table" class="table">
+      <thead>
+        <tr>
+          <th id="timestamp">TimeStamp</th>
+          <th id="guess">Your Guess</th>
+          <th id="result">Result</th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
 
-        <table id="table" class="table">
-            <thead>
-                <tr>
-                    <th id="timestamp">TimeStamp</th>
-                    <th id="guess">Your Guess</th>
-                    <th id="result">Result</th>
-                </tr>
-            </thead>
-            <tbody id="tbody"></tbody>
-        </table>
-
-        <div id="game-btn-container" class="game-btn-container">
-            <button
-                id="return-btn"
-                hx-get="/return"
-                hx-target="#form-container"
-                hx-swap="outerHTML"
-            >
-                home
-            </button>
-            <button
-                id="leaderboard-btn"
-                hx-get="/show-board"
-                hx-target="#leaderboard-tbody"
-            >
-                leaderboard
-            </button>
-        </div>
-
-        <div id="overlay-leaderboard" class="overlay">
-            <div id="popup-leaderboard" class="popup">
-                <h2>
-                    <span style="color: forestgreen">Leader</span
-                    ><span style="color: skyblue">board</span> [<span
-                        style="color: orange"
-                        >{{ .Digit }}</span
-                    >
-                    Digits]
-                </h2>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>id</th>
-                            <th>player</th>
-                            <th>attempts</th>
-                        </tr>
-                    </thead>
-                    <tbody id="leaderboard-tbody"></tbody>
-                </table>
-            </div>
-            <button id="close-leaderboard-btn" onclick="closePopup()">
-                close
-            </button>
-        </div>
+    <!-- on mobile only: use custom keyboard -->
+    <div id="keyboard" class="keyboard">
+      <div class="key">1</div>
+      <div class="key">2</div>
+      <div class="key">3</div>
+      <div class="key">4</div>
+      <div class="key">5</div>
+      <div class="key">6</div>
+      <div class="key">7</div>
+      <div class="key">8</div>
+      <div class="key">9</div>
+      <div class="key" id="delete">←</div>
+      <div class="key">0</div>
+      <div
+        class="key"
+        id="enter"
+        hx-get="/check"
+        hx-target="#table tbody"
+        hx-vals='{"id": "{{ .PlayerId }}"}'
+      >
+        ⏎
+      </div>
     </div>
+
+    <!-- home and leaderboard buttons at the bottom of the game page -->
+    <div id="game-btn-container" class="game-btn-container">
+      <button
+        id="return-btn"
+        hx-get="/return"
+        hx-target="#form-container"
+        hx-swap="outerHTML"
+      >
+        home
+      </button>
+      <button
+        id="leaderboard-btn"
+        hx-get="/show-board"
+        hx-target="#leaderboard-tbody"
+      >
+        leaderboard
+      </button>
+    </div>
+
+    <!-- leaderboard popup -->
+    <div id="overlay-leaderboard" class="overlay">
+      <div id="popup-leaderboard" class="popup">
+        <h2>
+          <span style="color: forestgreen">Leader</span
+          ><span style="color: skyblue">board</span> [<span
+            style="color: orange"
+            >{{ .Digit }}</span
+          >
+          Digits]
+        </h2>
+        <table>
+          <thead>
+            <tr>
+              <th>id</th>
+              <th>player</th>
+              <th>attempts</th>
+            </tr>
+          </thead>
+          <tbody id="leaderboard-tbody"></tbody>
+        </table>
+      </div>
+      <button id="close-leaderboard-btn" onclick="closePopup()">close</button>
+    </div>
+  </div>
 {{ end }}

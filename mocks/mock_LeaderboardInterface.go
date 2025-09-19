@@ -5,7 +5,7 @@ package mocks
 import (
 	context "context"
 
-	service "github.com/Livingpool/service"
+	service "github.com/livingpool/service"
 	mock "github.com/stretchr/testify/mock"
 )
 

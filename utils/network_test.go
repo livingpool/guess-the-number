@@ -4,7 +4,7 @@ import (
 	"net"
 	"testing"
 
-	"github.com/Livingpool/utils"
+	"github.com/livingpool/utils"
 	"github.com/stretchr/testify/assert"
 )
 

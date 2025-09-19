@@ -3,10 +3,10 @@ package router
 import (
 	"net/http"
 
-	"github.com/Livingpool/constants"
-	"github.com/Livingpool/handler"
-	"github.com/Livingpool/service"
-	"github.com/Livingpool/views"
+	"github.com/livingpool/constants"
+	"github.com/livingpool/handler"
+	"github.com/livingpool/service"
+	"github.com/livingpool/views"
 )
 
 func Init() *http.ServeMux {
@@ -24,6 +24,7 @@ func Init() *http.ServeMux {
 
 	// Serve all other requests
 	router.HandleFunc("/", gameHandler.Home)
+	router.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) { w.Write([]byte("ok")) })
 	router.HandleFunc("GET /return", gameHandler.ReturnHome)
 	router.HandleFunc("POST /new", gameHandler.NewGame)
 	router.HandleFunc("GET /check", gameHandler.CheckGuess)

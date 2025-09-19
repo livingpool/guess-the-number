@@ -8,10 +8,10 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/Livingpool/constants"
-	"github.com/Livingpool/middleware"
-	"github.com/Livingpool/service"
-	"github.com/Livingpool/views"
+	"github.com/livingpool/constants"
+	"github.com/livingpool/middleware"
+	"github.com/livingpool/service"
+	"github.com/livingpool/views"
 )
 
 type LeaderboardHandler struct {

@@ -1,9 +1,9 @@
 {{ block "result" . }}
-    {{ range .Rows }}
-        <tr>
-            <td headers="timestamp">{{ .TimeStamp }}</td>
-            <td headers="guess">{{ .Guess }}</td>
-            <td headers="result">{{ .Result }}</td>
-        </tr>
-    {{ end }}
+  {{ range .Rows }}
+    <tr>
+      <td headers="timestamp">{{ .TimeStamp }}</td>
+      <td headers="guess">{{ .Guess }}</td>
+      <td headers="result">{{ .Result }}</td>
+    </tr>
+  {{ end }}
 {{ end }}
