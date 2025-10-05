@@ -17,12 +17,12 @@ import (
 )
 
 type GameHandler struct {
-	renderer     views.TemplatesInterface
-	playerPool   service.PlayerPoolInterface
-	timeProvider service.TimeProviderInterface
+	renderer     views.TemplatesRepository
+	playerPool   service.PlayerPoolRepository
+	timeProvider service.TimeProviderRepository
 }
 
-func NewGameHandler(r views.TemplatesInterface, p service.PlayerPoolInterface, t service.TimeProviderInterface) *GameHandler {
+func NewGameHandler(r views.TemplatesRepository, p service.PlayerPoolRepository, t service.TimeProviderRepository) *GameHandler {
 	return &GameHandler{
 		renderer:     r,
 		playerPool:   p,
@@ -69,7 +69,7 @@ func (h *GameHandler) NewGame(w http.ResponseWriter, r *http.Request) {
 	answerStr := strconv.Itoa(answer)
 
 	// PlayerPool full error
-	newPlayer := h.playerPool.NewPlayer(answerStr)
+	newPlayer := h.playerPool.NewPlayer(answerStr, utils.GetTimeZone(utils.ReadUserIP(r)))
 	if err = h.playerPool.AddPlayer(newPlayer); err != nil {
 		formData := service.FormData{
 			Error: "Server is full. Please try again later!",
@@ -126,15 +126,40 @@ func (h *GameHandler) CheckGuess(w http.ResponseWriter, r *http.Request) {
 	}
 
 	result := genHint(guessStr, player.Answer)
-	timeZone := utils.GetTimeZone(utils.ReadUserIP(r))
 
 	row := service.ResultRow{
-		TimeStamp: h.timeProvider.Now(timeZone).Format(time.TimeOnly),
+		TimeStamp: h.timeProvider.Now(player.TimeZone).Format(time.TimeOnly),
 		Guess:     "#" + strconv.Itoa(len(player.GuessResults.Rows)+1) + ": " + guessStr,
 		Result:    result,
 	}
 
 	player.GuessResults.Rows = append([]service.ResultRow{row}, player.GuessResults.Rows...)
+
+	if err := h.renderer.Render(w, "result", player.GuessResults); err != nil {
+		slog.Error("render game error", "err", err.Error())
+	}
+}
+
+func (h *GameHandler) GetHints(w http.ResponseWriter, r *http.Request) {
+	reqId := r.Context().Value(middleware.RequestIdKey).(string)
+	playerId := r.URL.Query().Get("id")
+
+	// Player id not parseable error
+	id, err := strconv.Atoi(playerId)
+	if err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		w.Write([]byte("player id is not an integer"))
+		return
+	}
+
+	// Player doesn't exist error
+	player, exists := h.playerPool.GetPlayer(id)
+	if !exists {
+		w.WriteHeader(http.StatusNotFound)
+		w.Write([]byte("player id not found"))
+		slog.Error("player id not found", "reqId", reqId, "playerId", id)
+		return
+	}
 
 	if err := h.renderer.Render(w, "result", player.GuessResults); err != nil {
 		slog.Error("render game error", "err", err.Error())

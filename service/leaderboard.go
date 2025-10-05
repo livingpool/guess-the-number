@@ -11,7 +11,7 @@ import (
 	"github.com/livingpool/constants"
 )
 
-type LeaderboardInterface interface {
+type LeaderboardRepository interface {
 	Insert(ctx context.Context, data Record) error
 	Get(ctx context.Context, boardId int, name string) ([]Record, error)
 	Close() error

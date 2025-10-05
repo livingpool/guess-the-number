@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-type TimeProviderInterface interface {
+type TimeProviderRepository interface {
 	Now(timeZone string) time.Time
 }
 
@@ -22,6 +22,7 @@ func (rtp *RealTimeProvider) Now(timeZone string) time.Time {
 
 type Player struct {
 	Id           int
+	TimeZone     string
 	Answer       string
 	GuessResults GuessResults
 }

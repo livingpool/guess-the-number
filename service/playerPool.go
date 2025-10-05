@@ -7,8 +7,8 @@ import (
 	"github.com/livingpool/constants"
 )
 
-type PlayerPoolInterface interface {
-	NewPlayer(answerStr string) *Player
+type PlayerPoolRepository interface {
+	NewPlayer(answer, timeZone string) *Player
 	AddPlayer(player *Player) error
 	RemovePlayer(id int) error
 	GetPlayer(id int) (*Player, bool)
@@ -30,10 +30,11 @@ func NewPlayerPool(capacity int) *PlayerPool {
 	}
 }
 
-func (p *PlayerPool) NewPlayer(answer string) *Player {
+func (p *PlayerPool) NewPlayer(answer, timeZone string) *Player {
 	return &Player{
-		Id:     p.autoIncId.ID(),
-		Answer: answer,
+		Id:       p.autoIncId.ID(),
+		TimeZone: timeZone,
+		Answer:   answer,
 	}
 }
 

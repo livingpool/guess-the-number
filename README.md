@@ -33,6 +33,7 @@ A player will automatically be removed from the pool after some time of inactivi
 ```
   ├── cmd
         ├── main.go           
+  ├── config                     (sets up db)
   ├── constants                  (constants, auto-incremented playerId)
   ├── handler
         ├── game.go              (main game logic and http handlers)
@@ -66,6 +67,6 @@ A player will automatically be removed from the pool after some time of inactivi
 - more comprehensive logging (inspired by [ slog-http ](https://github.com/samber/slog-http))
 - replace mocking with unit + integration tests only
 - pull out db layer from service layer (follows previous)
-- some caching?
+- data can be stored in browser local storage to reduce # of lookups
 - css transitions when showing leaderboard
 - fix github actions

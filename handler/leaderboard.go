@@ -15,11 +15,11 @@ import (
 )
 
 type LeaderboardHandler struct {
-	renderer    views.TemplatesInterface
-	leaderboard service.LeaderboardInterface
+	renderer    views.TemplatesRepository
+	leaderboard service.LeaderboardRepository
 }
 
-func NewLeaderboardHandler(r views.TemplatesInterface, l service.LeaderboardInterface) *LeaderboardHandler {
+func NewLeaderboardHandler(r views.TemplatesRepository, l service.LeaderboardRepository) *LeaderboardHandler {
 	return &LeaderboardHandler{
 		renderer:    r,
 		leaderboard: l,

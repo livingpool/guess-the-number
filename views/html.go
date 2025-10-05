@@ -12,7 +12,7 @@ import (
 //go:embed assets/* css/* html/* scripts/*
 var StaticFiles embed.FS
 
-type TemplatesInterface interface {
+type TemplatesRepository interface {
 	Render(w io.Writer, name string, data interface{}) error
 }
 

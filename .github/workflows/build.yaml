@@ -26,34 +26,34 @@ jobs:
             - name: Test with the Go CLI
               run: go test ./...
 
-    deploy:
-        permissions: 
-            contents: 'read'
-            id-token: 'write'
-
-        needs: test
-        name: Deploy to GAE
-        runs-on: ubuntu-latest
-
-        steps:
-            - uses: actions/checkout@v4
-
-            - name: Authenticate to Google Cloud
-              uses: 'google-github-actions/auth@v2'
-              with:
-                  project_id: 'guess-the-number-425013'
-                  workload_identity_provider: 'projects/1041356889556/locations/global/workloadIdentityPools/github/providers/my-repo'
-
-            - name: Set up Cloud SDK
-              uses: 'google-github-actions/setup-gcloud@v2'
-              with:
-                  install_components: 'app-engine-go'
-
-            - name: Use gcloud CLI
-              run: 'gcloud info'
-
-            - name: List components
-              run: 'gcloud components list'
-
-            - name: Deploy to GAE
-              uses: 'google-github-actions/deploy-appengine@v2'
+    # deploy:
+    #     permissions: 
+    #         contents: 'read'
+    #         id-token: 'write'
+    #
+    #     needs: test
+    #     name: Deploy to GAE
+    #     runs-on: ubuntu-latest
+    #
+    #     steps:
+    #         - uses: actions/checkout@v4
+    #
+    #         - name: Authenticate to Google Cloud
+    #           uses: 'google-github-actions/auth@v2'
+    #           with:
+    #               project_id: 'guess-the-number-425013'
+    #               workload_identity_provider: 'projects/1041356889556/locations/global/workloadIdentityPools/github/providers/my-repo'
+    #
+    #         - name: Set up Cloud SDK
+    #           uses: 'google-github-actions/setup-gcloud@v2'
+    #           with:
+    #               install_components: 'app-engine-go'
+    #
+    #         - name: Use gcloud CLI
+    #           run: 'gcloud info'
+    #
+    #         - name: List components
+    #           run: 'gcloud components list'
+    #
+    #         - name: Deploy to GAE
+    #           uses: 'google-github-actions/deploy-appengine@v2'

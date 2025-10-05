@@ -2,9 +2,9 @@ with-expecter: true
 dir: mocks
 outpkg: mocks
 packages:
-    github.com/Livingpool/service:
+    github.com/livingpool/service:
         config:
             all: true
-    github.com/Livingpool/views:
+    github.com/livingpool/views:
         config:
             all: true

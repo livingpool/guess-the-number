@@ -18,9 +18,9 @@ import (
 )
 
 func TestNewGame(t *testing.T) {
-	mockTemplates := mocks.NewMockTemplatesInterface(t)
-	mockPlayerPool := mocks.NewMockPlayerPoolInterface(t)
-	mockTimeProvider := mocks.NewMockTimeProviderInterface(t)
+	mockTemplates := mocks.NewMockTemplatesRepository(t)
+	mockPlayerPool := mocks.NewMockPlayerPoolRepository(t)
+	mockTimeProvider := mocks.NewMockTimeProviderRepository(t)
 	mockGameHandler := NewGameHandler(mockTemplates, mockPlayerPool, mockTimeProvider)
 
 	testcases := []struct {
@@ -36,7 +36,7 @@ func TestNewGame(t *testing.T) {
 		{"valid_input", "8", 200, "8"},
 	}
 
-	mockPlayerPool.EXPECT().NewPlayer(mock.AnythingOfType("string")).Return(new(service.Player))
+	mockPlayerPool.EXPECT().NewPlayer(mock.AnythingOfType("string"), mock.AnythingOfType("string")).Return(new(service.Player))
 	mockPlayerPool.EXPECT().AddPlayer(mock.Anything).Return(nil)
 
 	received := make([]service.FormData, 0, len(testcases))
@@ -95,9 +95,9 @@ func TestGenHint(t *testing.T) {
 
 // this seems like a bit too much mocking tbf
 func TestCheckGuess(t *testing.T) {
-	mockTemplates := mocks.NewMockTemplatesInterface(t)
-	mockPlayerPool := mocks.NewMockPlayerPoolInterface(t)
-	mockTimeProvider := mocks.NewMockTimeProviderInterface(t)
+	mockTemplates := mocks.NewMockTemplatesRepository(t)
+	mockPlayerPool := mocks.NewMockPlayerPoolRepository(t)
+	mockTimeProvider := mocks.NewMockTimeProviderRepository(t)
 	mockGameHandler := NewGameHandler(mockTemplates, mockPlayerPool, mockTimeProvider)
 
 	testcases := []struct {
