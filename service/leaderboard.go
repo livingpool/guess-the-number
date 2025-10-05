@@ -4,9 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-	"log"
 	"math"
-	"os"
 
 	_ "github.com/tursodatabase/libsql-client-go/libsql"
 
@@ -29,22 +27,7 @@ type Record struct {
 	Attempts int    `json:"attempts"`
 }
 
-func NewLeaderboard() *Leaderboard {
-	url := os.Getenv("TURSO_DATABASE_URL") + "?authToken=" + os.Getenv("TURSO_AUTH_TOKEN")
-	db, err := sql.Open("libsql", url)
-	if err != nil {
-		log.Fatalf("error connecting to turso: %v", err)
-	}
-
-	var sqlStmt string
-	for i := constants.DIGIT_LOWER_LIMIT; i <= constants.DIGIT_UPPER_LIMIT; i++ {
-		stmt := fmt.Sprintf("create table if not exists board%d (id integer primary key, name text unique, attempts integer);", i)
-		sqlStmt += stmt
-	}
-
-	if _, err = db.Exec(sqlStmt); err != nil {
-		log.Fatalf("error executing sql: %v", err)
-	}
+func NewLeaderboard(db *sql.DB) *Leaderboard {
 	return &Leaderboard{db}
 }
 

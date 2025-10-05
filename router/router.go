@@ -3,17 +3,18 @@ package router
 import (
 	"net/http"
 
+	"github.com/livingpool/config"
 	"github.com/livingpool/constants"
 	"github.com/livingpool/handler"
 	"github.com/livingpool/service"
 	"github.com/livingpool/views"
 )
 
-func Init() *http.ServeMux {
+func Init(conf *config.Config) *http.ServeMux {
 	router := http.NewServeMux()
 	playerPool := service.NewPlayerPool(constants.PLAYER_POOL_CAP)
 	gameHandler := handler.NewGameHandler(views.NewTemplates(), playerPool, &service.RealTimeProvider{})
-	leaderboardHandler := handler.NewLeaderboardHandler(views.NewTemplates(), service.NewLeaderboard())
+	leaderboardHandler := handler.NewLeaderboardHandler(views.NewTemplates(), service.NewLeaderboard(conf.DB))
 
 	// http.FS can be used to create a http.Filesystem
 	var staticFS = http.FS(views.StaticFiles)
