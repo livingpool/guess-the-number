@@ -1,161 +1,268 @@
 .form-container table {
-    font-size: 1.5rem;
-    border-spacing: 30px;
-    background-color: white;
-    color: black;
-    border-collapse: collapse;
-    width: 90%;
+  font-size: 1.5rem;
+  border-spacing: 30px;
+  background-color: white;
+  color: black;
+  border-collapse: collapse;
+  width: 90%;
 }
 
 .form-container table thead {
-    display: table;
-    table-layout: fixed;
-    width: 100%;
+  display: table;
+  table-layout: fixed;
+  width: 100%;
 }
 
 .form-container table thead tr th {
-    font-weight: 700 !important;
+  font-weight: 700 !important;
 }
 
 .form-container table tbody tr {
-    display: table;
-    table-layout: fixed;
-    width: 100%;
+  display: table;
+  table-layout: fixed;
+  width: 100%;
 }
 
 .form-container table tbody {
-    display: block;
-    height: 300px;
-    overflow-y: auto;
+  display: block;
+  height: 300px;
+  overflow-y: auto;
 }
 
 .form-container table th,
 .form-container table td {
-    text-align: center;
-    padding: 10px;
+  text-align: center;
+  padding: 10px;
 }
 
 .form-container table th {
-    border-bottom: 3px solid transparent;
+  border-bottom: 3px solid transparent;
 }
 
 .game-btn-container {
-    margin-top: 15px;
-    justify-content: center;
+  margin-top: 15px;
+  justify-content: center;
 }
 
 .game-btn-container button {
-    background-color: transparent;
-    border: none;
-    color: orange;
-    font-size: 2rem;
-    cursor: pointer;
-    overflow: hidden;
-    outline: none;
+  background-color: transparent;
+  border: none;
+  color: orange;
+  font-size: 2rem;
+  cursor: pointer;
+  overflow: hidden;
+  outline: none;
 
-    margin-left: 40px;
-    margin-right: 40px;
+  margin-left: 40px;
+  margin-right: 40px;
 }
 
-[data-theme='dark'] .game-btn-container button:hover,
-[data-theme='dark'] .game-btn-container button:focus {
-    color: #ffd580;
+[data-theme="dark"] .game-btn-container button:hover,
+[data-theme="dark"] .game-btn-container button:focus {
+  color: #ffd580;
 }
 
-[data-theme='light'] .game-btn-container button:hover,
-[data-theme='light'] .game-btn-container button:focus {
-    color: #ff8c00;
+[data-theme="light"] .game-btn-container button:hover,
+[data-theme="light"] .game-btn-container button:focus {
+  color: #ff8c00;
+}
+
+/*
+ * custom keyboard
+ */
+.keyboard {
+  display: none; /* hidden by default; shown on small screens */
+  width: 90%;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.keyboard .key {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 1 / 1;
+  font-size: 2rem;
+  border-radius: 10px;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  cursor: pointer;
+  border: 2px solid transparent;
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.15);
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease,
+    transform 0.05s ease,
+    border-color 0.15s ease;
+}
+
+[data-theme="light"] .keyboard .key {
+  background-color: white;
+  color: black;
+  border-color: #eee;
+}
+
+[data-theme="dark"] .keyboard .key {
+  background-color: #111;
+  color: white;
+  border-color: #333;
+}
+
+.keyboard .key:hover,
+.keyboard .key:focus {
+  outline: none;
+}
+
+[data-theme="light"] .keyboard .key:hover,
+[data-theme="light"] .keyboard .key:focus {
+  background-color: #fff4e0;
+  border-color: #ffd3a1;
+}
+
+[data-theme="dark"] .keyboard .key:hover,
+[data-theme="dark"] .keyboard .key:focus {
+  background-color: #1a1a1a;
+  border-color: #444;
+}
+
+.keyboard .key:active {
+  transform: translateY(1px);
+}
+
+#key-enter,
+#key-delete {
+  font-weight: 700;
+}
+
+[data-theme="light"] #key-enter,
+[data-theme="light"] #key-delete {
+  color: #e27c00; /* darkorange-ish accent */
+  border-color: orange;
+}
+
+[data-theme="dark"] #key-enter,
+[data-theme="dark"] #key-delete {
+  color: #ffd580;
+  border-color: #e27c00;
 }
 
 /* 
  * leaderboard popup
 */
 .overlay {
-    display: none;
-    flex-direction: column;
-    position: fixed;
-    inset: 0px;
-    max-width: 100vw;
-    max-height: 100dvh;
-    justify-content: center;
-    align-items: center;
-    z-index: 999;
+  display: none;
+  flex-direction: column;
+  position: fixed;
+  inset: 0px;
+  max-width: 100vw;
+  max-height: 100dvh;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
 }
 
-[data-theme='dark'] .overlay {
-    background-color: black;
+[data-theme="dark"] .overlay {
+  background-color: black;
 }
 
-[data-theme='light'] .overlay {
-    background-color: lemonchiffon;
+[data-theme="light"] .overlay {
+  background-color: lemonchiffon;
 }
 
 .popup {
-    display: none;
-    background-color: transparent;
-    flex-direction: column;
-    position: relative;
-    width: 50%;
-    max-width: fit-content;
-    max-height: fit-content;
+  display: none;
+  background-color: transparent;
+  flex-direction: column;
+  position: relative;
+  width: 50%;
+  max-width: fit-content;
+  max-height: fit-content;
 }
 
 .popup *,
 .overlay * {
-    z-index: inherit;
+  z-index: inherit;
 }
 
 .popup table {
-    width: fit-content;
-    border-radius: 10px;
+  width: fit-content;
+  border-radius: 10px;
 }
 
 .popup table tbody {
-    height: 500px;
+  height: 500px;
 }
 
 .popup td {
-    word-break: break-all;
+  word-break: break-all;
 }
 
 .overlay button {
-    font-size: 2rem;
-    border: 2px solid orange;
-    border-radius: 5px;
-    background-color: white;
-    color: #e27c00;
-    margin-top: 10px;
-    margin-bottom: 20px;
+  font-size: 2rem;
+  border: 2px solid orange;
+  border-radius: 5px;
+  background-color: white;
+  color: #e27c00;
+  margin-top: 10px;
+  margin-bottom: 20px;
 }
 
 .overlay button:hover,
 .overlay buton:focus {
-    background-color: orange;
-    color: white;
-    outline: none;
-    cursor: pointer;
+  background-color: orange;
+  color: white;
+  outline: none;
+  cursor: pointer;
+}
+
+#hints-btn {
+  display: none;
+  border: 1px solid orange;
+  border-radius: 3px;
+  background-color: white;
+  color: #e27c00;
+}
+
+#hints-btn:hover,
+#hints-btn:focus {
+  background-color: orange;
+  color: white;
+  outline: none;
+  cursor: pointer;
 }
 
 @media screen and (max-width: 600px) {
-    .form-container table {
-        width: 100%;
-    }
+  .keyboard {
+    display: grid;
+    width: fit-content;
+    grid-template-columns: repeat(3, 50px);
+    gap: 8px;
+    justify-content: center;
+  }
 
-    .form-container table tbody {
-        height: 180px;
-    }
+  .keyboard .key {
+    font-size: 1.4rem;
+    border-radius: 8px;
+  }
 
-    .game-btn-container button {
-        font-size: 1.5rem;
-        margin-left: 20px;
-        margin-right: 20px;
-    }
+  .game-btn-container button {
+    font-size: 1.5rem;
+    margin-left: 20px;
+    margin-right: 20px;
+  }
 
-    .popup {
-        width: 80%;
-    }
+  .popup {
+    width: 80%;
+  }
 
-    .popup table tbody {
-        height: 400px;
-    }
+  .popup table tbody {
+    height: 400px;
+  }
+
+  #hints-btn {
+    display: block;
+    font-size: 1.6rem;
+    margin-top: 20px;
+  }
 }

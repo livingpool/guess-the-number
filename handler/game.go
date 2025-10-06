@@ -140,32 +140,6 @@ func (h *GameHandler) CheckGuess(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (h *GameHandler) GetHints(w http.ResponseWriter, r *http.Request) {
-	reqId := r.Context().Value(middleware.RequestIdKey).(string)
-	playerId := r.URL.Query().Get("id")
-
-	// Player id not parseable error
-	id, err := strconv.Atoi(playerId)
-	if err != nil {
-		w.WriteHeader(http.StatusNotFound)
-		w.Write([]byte("player id is not an integer"))
-		return
-	}
-
-	// Player doesn't exist error
-	player, exists := h.playerPool.GetPlayer(id)
-	if !exists {
-		w.WriteHeader(http.StatusNotFound)
-		w.Write([]byte("player id not found"))
-		slog.Error("player id not found", "reqId", reqId, "playerId", id)
-		return
-	}
-
-	if err := h.renderer.Render(w, "result", player.GuessResults); err != nil {
-		slog.Error("render game error", "err", err.Error())
-	}
-}
-
 func genHint(guess, answer string) string {
 	a, b := 0, 0
 	aMap := make([]bool, len(guess)) // positions of a's

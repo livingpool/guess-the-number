@@ -29,7 +29,6 @@ func Init(conf *config.Config) *http.ServeMux {
 	router.HandleFunc("GET /return", gameHandler.ReturnHome)
 	router.HandleFunc("POST /new", gameHandler.NewGame)
 	router.HandleFunc("GET /check", gameHandler.CheckGuess)
-	router.HandleFunc("GET /get-hints", gameHandler.GetHints)
 	router.HandleFunc("POST /save-record", leaderboardHandler.SaveRecord)
 	router.HandleFunc("GET /show-board", leaderboardHandler.ShowLeaderboard)
 

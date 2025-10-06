@@ -1,5 +1,5 @@
 function insertIndex() {
-  const bodySection = document.getElementById("leaderboard-tbody");
+  const bodySection = htmx.find("#popup-leaderboard tbody");
   const name = document.getElementById("form-container").getAttribute("name");
 
   for (let i = 0; i < bodySection.rows.length; i++) {
@@ -13,12 +13,12 @@ function insertIndex() {
   }
 }
 
-function openPopup() {
+function openLeaderboardPopup() {
   document.getElementById("overlay-leaderboard").style.display = "flex";
   document.getElementById("popup-leaderboard").style.display = "flex";
 }
 
-function closePopup() {
+function closeLeaderboardPopup() {
   document.getElementById("overlay-leaderboard").style.display = "none";
   document.getElementById("popup-leaderboard").style.display = "none";
 }

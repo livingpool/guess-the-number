@@ -1,3 +1,7 @@
+function isMobile() {
+  return window.matchMedia("(max-width: 600px)").matches;
+}
+
 function addFields(digit) {
   let parent = document.createElement("div");
   parent.id = "input-container";
@@ -7,20 +11,35 @@ function addFields(digit) {
 
   // dynamically generate input fields for game.html
   for (i = 0; i < digit; i++) {
-    let input = document.createElement("div");
+    let input = document.createElement("input");
     input.type = "number";
     input.min = "0";
     input.max = "9";
-    input.name = "digit" + (i + 1);
-    input.id = "digit" + (i + 1);
+    input.name = "digit" + i;
+    input.id = "digit" + i;
     input.className = "digit-input";
     input.tabIndex = -1;
     container.appendChild(input);
+
+    if (isMobile()) {
+      input.readOnly = true;
+    }
   }
 
+  if (isMobile()) {
+    configureMobileKeyboard();
+    const hintsTable = document.getElementById("hints-table");
+    document.getElementById("popup-hints").appendChild(hintsTable);
+  } else {
+    setDigitInputEventListeners();
+  }
+}
+
+// on large devices, use system keyboard
+function setDigitInputEventListeners() {
   let boxes = document.getElementsByClassName("digit-input");
   let secondPress = false;
-  document.getElementById("digit1").focus();
+  document.getElementById("digit0").focus();
 
   // allow only single digit inputs
   Array.from(boxes).forEach((box, index, array) => {
@@ -60,36 +79,56 @@ function calcInputs() {
   return val;
 }
 
-//
-// mobile custom keyboard
-//
-
-const cursor = 1; // global variable to keep track of which the current input box
-
-const keys = document.querySelectorAll(".key");
-const deleteKey = document.getElementById("delete");
-const enterKey = document.getElementById("enter");
+function clearInputsAndReFocus() {
+  const inputs = document.getElementsByClassName("digit-input");
+  Array.from(inputs).forEach((i) => {
+    i.value = "";
+  });
+  const box = document.getElementById("digit0");
+  box.focus();
+}
 
 // mobile: enter digits via custom keyboard
-keys.forEach((key) => {
-  const value = key.textContent;
-  if (key.id === "delete") {
-    key.addEventListener("click", () => {
-      let box = document.getElementById("digit" + cursor);
-      box.textContent = "";
-      if (cursor != 1) {
-        cursor--;
-        box.previousElementSibling.focus();
-      }
-    });
-  } else if (key.id === "enter") {
-    key.addEventListener("click", () => {
-      input.textContent = "";
-    });
-  } else {
-    key.addEventListener("click", () => {});
-  }
-});
+function configureMobileKeyboard() {
+  let n = document.getElementsByClassName("digit-input").length;
+  let cursor = 0;
+  let keys = Array.from(document.getElementsByClassName("key"));
 
-// TODO: so the problem is i want to show animations on the input fields using focus()
-// but i dont want to show the built-in keyboard on mobile
+  document.getElementById("digit0").focus();
+
+  keys.forEach((key) => {
+    if (key.id === "key-delete") {
+      key.addEventListener("click", () => {
+        if (cursor == 0) {
+          return;
+        }
+        let box = document.getElementById("digit" + (cursor - 1));
+        box.value = "";
+        cursor--;
+        if (box.previousElementSibling !== null) {
+          box.previousElementSibling.focus();
+        }
+      });
+    } else if (key.id === "key-enter") {
+      key.addEventListener("click", () => {
+        cursor = 0;
+      });
+    } else {
+      key.addEventListener("click", () => {
+        if (cursor == n) {
+          return;
+        }
+        let box = document.getElementById("digit" + cursor);
+        box.value = key.textContent;
+        if (cursor != n) {
+          cursor++;
+          if (cursor == n) {
+            box.blur();
+          } else {
+            box.nextElementSibling.focus();
+          }
+        }
+      });
+    }
+  });
+}

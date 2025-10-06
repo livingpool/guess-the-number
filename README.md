@@ -12,9 +12,7 @@ For example, if guess = 312 and the answer is 321, the hint would be 1a2b.
 </p>
 
 ### To run this project locally
-- I use [turso](https://turso.tech) as a serverless sql database.
-- To start the project, first make a copy of .env.example and name it .env. \
-  Make an account at turso and fill in the url and token in .env.
+- Set IsProduction in ./cmd/main.go to false
 
 - Old school way (Go version 1.22+ is required):
 ```bash
@@ -26,6 +24,11 @@ go run .
 ```bash
  air -c ./air.toml
 ```
+
+#### For production:
+- I use [turso](https://turso.tech) as a serverless sql database.
+- To start the project, first make a copy of .env.example and name it .env. \
+  Make an account at turso and fill in the url and token in .env.
 
 ### Project structure
 When a client hits the /new endpoint, a new player instance is created and added to the player pool. \
@@ -62,11 +65,11 @@ A player will automatically be removed from the pool after some time of inactivi
 
 ### TODOs
 - api protection (will need some sort of state on the server)
-- move static assets to google cloud storage (s3-compatible)
-- see how to analyse structured logs (elastic search?)
-- more comprehensive logging (inspired by [ slog-http ](https://github.com/samber/slog-http))
-- replace mocking with unit + integration tests only
-- pull out db layer from service layer (follows previous)
-- data can be stored in browser local storage to reduce # of lookups
-- css transitions when showing leaderboard
 - fix github actions
+- [OPTIONAL] move static assets to google cloud storage (s3-compatible)
+- [OPTIONAL] see how to analyse structured logs (elastic search?)
+- [OPTIONAL] more comprehensive logging (inspired by [ slog-http ](https://github.com/samber/slog-http))
+- [OPTIONAL] replace mocking with unit + integration tests only
+- [OPTIONAL] pull out db layer from service layer (follows previous)
+- [OPTIONAL] data can be stored in browser storage & move some validations to the frontend to reduce # of lookups
+- [OPTIONAL] css transitions when showing leaderboard

@@ -1,159 +1,164 @@
 .outer {
-    display: table;
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 100%;
-    font-size: 62.5%;
+  display: table;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  font-size: 62.5%;
 }
 
 .middle {
-    display: table-cell;
-    vertical-align: middle;
+  display: table-cell;
+  vertical-align: middle;
 }
 
 .inner {
-    position: relative;
-    margin-left: auto;
-    margin-right: auto;
-    width: 500px;
-    /* Whatever width you want */
+  position: relative;
+  margin-left: auto;
+  margin-right: auto;
+  width: 500px;
+  /* Whatever width you want */
 }
 
 h1,
 h1 span {
-    font-size: 3rem;
-    text-align: center;
-    margin-block: 0;
+  font-size: 3rem;
+  text-align: center;
+  margin-block: 0;
 }
 
 h2 {
-    font-size: 2.5rem;
-    text-align: center;
-    margin-block: 0;
+  font-size: 2.5rem;
+  text-align: center;
+  margin-block: 0;
 }
 
 .me-container {
-    position: absolute;
-    top: -40px;
-    right: 100px;
+  position: absolute;
+  top: -40px;
+  right: 100px;
 }
 
 .me-container img {
-    border-radius: 50%;
-    width: 35px;
+  border-radius: 50%;
+  width: 35px;
 }
 
 .me-container img:hover {
-    box-shadow: 0 0 0 6px rgba(225, 0, 0, 0.15);
+  box-shadow: 0 0 0 6px rgba(225, 0, 0, 0.15);
 }
 
 form {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 form input {
-    font-size: 4rem;
-    border-radius: 25px;
-    border: 3px solid orange;
-    width: 100px;
-    height: 100px;
-    text-align: center;
-    margin-top: 20px;
-    margin-bottom: 20px;
+  font-size: 4rem;
+  border-radius: 25px;
+  border: 3px solid orange;
+  width: 100px;
+  height: 100px;
+  text-align: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
 }
 
 .form-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .input-container {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    margin-top: 10px;
-    flex-wrap: wrap;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  margin-top: 10px;
+  flex-wrap: wrap;
 }
 
 .digit-input {
-    font-size: 2rem;
-    border-radius: 20px;
-    border: 3px solid orange;
-    width: 50px;
-    height: 50px;
-    text-align: center;
-    margin-left: 5px;
-    margin-right: 5px;
-    margin-bottom: 20px;
+  font-size: 2rem;
+  border-radius: 20px;
+  border: 3px solid orange;
+  width: 50px;
+  height: 50px;
+  text-align: center;
+  margin-left: 5px;
+  margin-right: 5px;
+  margin-bottom: 20px;
 }
 
 form input:focus,
 .digit-input:focus {
-    outline: 4px solid orange;
+  outline: 4px solid orange;
 }
 
 form .form-error-msg {
-    font-size: 2rem;
-    color: red;
-    margin-bottom: 20px;
+  font-size: 2rem;
+  color: red;
+  margin-bottom: 20px;
 }
 
 form button,
 .submit-btn {
-    font-size: 3rem;
-    border: 2px solid orange;
-    border-radius: 5px;
-    background-color: white;
-    color: #e27c00;
-    margin-top: 10px;
-    margin-bottom: 20px;
+  font-size: 3rem;
+  border: 2px solid orange;
+  border-radius: 5px;
+  background-color: white;
+  color: #e27c00;
+  margin-top: 10px;
+  margin-bottom: 20px;
 }
 
 form button:hover,
 form button:focus,
 .submit-btn:hover,
 .submit-btn:focus {
-    background-color: orange;
-    color: white;
-    outline: none;
+  background-color: orange;
+  color: white;
+  outline: none;
+  cursor: pointer;
 }
 
 @media screen and (max-width: 600px) {
-    .inner {
-        width: 300px;
-    }
+  .inner {
+    width: 300px;
+  }
 
-    form input {
-        font-size: 3rem;
-        width: 80px;
-        height: 80px;
-    }
+  form input {
+    font-size: 3rem;
+    width: 80px;
+    height: 80px;
+  }
 
-    .digit-input {
-        font-size: 1.5rem;
-        font-weight: 700 !important;
-        width: 30px;
-        height: 30px;
-    }
+  .digit-input {
+    font-size: 1.5rem;
+    font-weight: 700 !important;
+    width: 30px;
+    height: 30px;
+  }
 
-    .digit-input:focus {
-        outline: 3px solid orange;
-    }
+  .digit-input:focus {
+    outline: 3px solid orange;
+  }
 
-    form .form-error-msg {
-        font-size: 1.5rem;
-    }
+  form .form-error-msg {
+    font-size: 1.5rem;
+  }
 
-    form button,
-    .submit-btn {
-        font-size: 2rem;
-    }
+  form button,
+  .submit-btn {
+    font-size: 2rem;
+  }
+
+  #submit-btn {
+    display: none;
+  }
 }

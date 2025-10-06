@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
     if (evt.detail.xhr.status == 422) {
       evt.detail.shouldSwap = true;
       evt.detail.isError = false;
-      if (evt.detail.target.id == "tbody") {
+      if (evt.detail.target == htmx.find("#hints-table tbody")) {
         Swal.fire({
           title: "u entered the wrong digits",
           icon: "warning",
@@ -26,14 +26,17 @@ document.addEventListener("DOMContentLoaded", (event) => {
       });
     }
   });
+
   document.addEventListener("htmx:afterSwap", (evt) => {
     if (evt.detail.elt.id == "form-container") {
       const digit = parseInt(
         document.getElementById("form-container").getAttribute("data-digit")
       );
-      addFields(digit);
-    } else if (evt.detail.elt.id == "leaderboard-tbody") {
-      openPopup();
+      if (digit) {
+        addFields(digit);
+      }
+    } else if (evt.detail.elt == htmx.find("#popup-leaderboard tbody")) {
+      openLeaderboardPopup();
       insertIndex();
     }
   });
@@ -41,17 +44,16 @@ document.addEventListener("DOMContentLoaded", (event) => {
   // TODO: there is a werid problem where this request's elt & target are both tbody. See if i can reproduce it!
   // handle winning condition
   document.addEventListener("htmx:afterSettle", (evt) => {
-    if (evt.detail.target.id == "tbody" && evt.detail.xhr.status != 422) {
+    const tbody = htmx.find("#hints-table tbody");
+    if (evt.detail.target == tbody && evt.detail.xhr.status != 422) {
       const digit = document
         .getElementById("form-container")
         .getAttribute("data-digit");
-      const matchDigit = document.getElementById("tbody").rows.length
-        ? document.getElementById("tbody").rows[0].cells[2].textContent[0]
+      const matchDigit = tbody.rows.length
+        ? tbody.rows[0].cells[2].textContent[0]
         : null;
-      const ans = document.getElementById("tbody").rows.length
-        ? document
-            .getElementById("tbody")
-            .rows[0].cells[1].textContent.split(" ")[1]
+      const ans = tbody.rows.length
+        ? tbody.rows[0].cells[1].textContent.split(" ")[1]
         : null;
       if (matchDigit && matchDigit == digit) {
         notifyResult(ans);
@@ -61,14 +63,9 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
   document.addEventListener("htmx:configRequest", (evt) => {
     // add param to request GET /check
-    if (evt.detail.elt.id == "submit-btn") {
+    if (evt.detail.elt.id == "submit-btn" || evt.detail.elt.id == "key-enter") {
       evt.detail.parameters["guess"] = calcInputs(); // add a new param to request
-      var inputs = document.getElementsByClassName("digit-input"); // clear input
-      Array.from(inputs).forEach((i) => {
-        i.value = "";
-      });
-      const box = document.getElementById("digit1");
-      box.focus();
+      clearInputsAndReFocus();
     }
 
     // add param to request GET /show-board
@@ -111,7 +108,7 @@ async function notifyResult(ans) {
     const digit = parseInt(
       document.getElementById("form-container").getAttribute("data-digit")
     );
-    const attempts = document.getElementById("tbody").rows.length;
+    const attempts = htmx.find("#hints-table tbody").rows.length;
 
     fetch(window.location.origin + "/save-record", {
       method: "POST",

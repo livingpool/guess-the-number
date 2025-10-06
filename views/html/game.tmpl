@@ -19,47 +19,52 @@
       id="submit-btn"
       class="submit-btn"
       hx-get="/check"
-      hx-target="#table tbody"
+      hx-target="#hints-table tbody"
       hx-vals='{"id": "{{ .PlayerId }}"}'
     >
       let's go!
     </button>
 
-    <!-- TODO: on mobile: this is shown as a popup -->
-    <table id="table" class="table">
+    <!-- on mobile: this is shown as a popup -->
+    <table id="hints-table" class="table">
       <thead>
         <tr>
-          <th id="timestamp">TimeStamp</th>
-          <th id="guess">Your Guess</th>
-          <th id="result">Result</th>
+          <th>TimeStamp</th>
+          <th>Your Guess</th>
+          <th>Result</th>
         </tr>
       </thead>
-      <tbody id="tbody"></tbody>
+      <tbody></tbody>
     </table>
 
     <!-- on mobile only: use custom keyboard -->
     <div id="keyboard" class="keyboard">
-      <div class="key">1</div>
-      <div class="key">2</div>
-      <div class="key">3</div>
-      <div class="key">4</div>
-      <div class="key">5</div>
-      <div class="key">6</div>
-      <div class="key">7</div>
-      <div class="key">8</div>
-      <div class="key">9</div>
-      <div class="key" id="delete">←</div>
-      <div class="key">0</div>
+      <div id="key1" class="key">1</div>
+      <div id="key2" class="key">2</div>
+      <div id="key3" class="key">3</div>
+      <div id="key4" class="key">4</div>
+      <div id="key5" class="key">5</div>
+      <div id="key6" class="key">6</div>
+      <div id="key7" class="key">7</div>
+      <div id="key8" class="key">8</div>
+      <div id="key9" class="key">9</div>
+      <div id="key-delete" class="key">←</div>
+      <div id="key0" class="key">0</div>
       <div
         class="key"
-        id="enter"
+        id="key-enter"
         hx-get="/check"
-        hx-target="#table tbody"
+        hx-target="#hints-table tbody"
         hx-vals='{"id": "{{ .PlayerId }}"}'
       >
         ⏎
       </div>
     </div>
+
+    <!-- mobile only: hints-btn -->
+    <button id="hints-btn" class="hints-btn" onclick="openHintsPopup()">
+      check hints
+    </button>
 
     <!-- home and leaderboard buttons at the bottom of the game page -->
     <div id="game-btn-container" class="game-btn-container">
@@ -74,10 +79,18 @@
       <button
         id="leaderboard-btn"
         hx-get="/show-board"
-        hx-target="#leaderboard-tbody"
+        hx-target="#popup-leaderboard tbody"
       >
         leaderboard
       </button>
+    </div>
+
+    <!-- mobile-only: hints popup -->
+    <div id="overlay-hints" class="overlay">
+      <div id="popup-hints" class="popup">
+        <table></table>
+      </div>
+      <button id="close-hints-btn" onclick="closeHintsPopup()">close</button>
     </div>
 
     <!-- leaderboard popup -->
@@ -99,10 +112,12 @@
               <th>attempts</th>
             </tr>
           </thead>
-          <tbody id="leaderboard-tbody"></tbody>
+          <tbody></tbody>
         </table>
       </div>
-      <button id="close-leaderboard-btn" onclick="closePopup()">close</button>
+      <button id="close-leaderboard-btn" onclick="closeLeaderboardPopup()">
+        close
+      </button>
     </div>
   </div>
 {{ end }}
