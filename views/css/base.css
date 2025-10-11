@@ -1,125 +1,126 @@
 html * {
-    font-family: 'Cute Font', sans-serif;
-    font-weight: 400;
-    font-style: normal;
-    transition: background-color 0.3s ease;
+  font-family: "Cute Font", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  transition: background-color 0.3s ease;
+  touch-action: manipulation;
 }
 
-html[data-theme='light'] {
-    background-color: lemonchiffon;
+html[data-theme="light"] {
+  background-color: lemonchiffon;
 }
 
-html[data-theme='dark'] {
-    background-color: black;
-    color: white;
+html[data-theme="dark"] {
+  background-color: black;
+  color: white;
 }
 
 body {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 /* Chrome, Safari, Edge, Opera */
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 /* Firefox */
-input[type='number'] {
-    -moz-appearance: textfield;
+input[type="number"] {
+  -moz-appearance: textfield;
 }
 
 /* Swal configurations */
 .swal2-popup {
-    font-size: 1.6rem;
-    width: 24rem;
+  font-size: 1.6rem;
+  width: 24rem;
 }
 
 /* Dark/Light theme toggle */
 .slide-toggle {
-    position: absolute;
-    top: -40px;
-    right: 20px;
-    display: inline-block;
-    border-radius: 3px;
+  position: absolute;
+  top: -40px;
+  right: 20px;
+  display: inline-block;
+  border-radius: 3px;
 }
 
 .slide-toggle img {
-    width: 30px;
+  width: 30px;
 }
 
 .slide-toggle input:first-of-type {
-    position: absolute;
-    top: 0;
-    left: 0;
-    opacity: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
 }
 
 .slide-toggle input:first-of-type:focus ~ label {
-    box-shadow: 0 0 0 6px rgba(255, 0, 0, 0.15);
+  box-shadow: 0 0 0 6px rgba(255, 0, 0, 0.15);
 }
 
 .slide-toggle input:first-of-type:checked ~ label {
-    color: #fff;
-    background-color: darkorange;
+  color: #fff;
+  background-color: darkorange;
 }
 
 .slide-toggle input:first-of-type:checked ~ label:after {
-    transform: translateX(100%);
+  transform: translateX(100%);
 }
 
 .slide-toggle input:first-of-type:disabled ~ label {
-    opacity: 0.5;
-    pointer-events: none;
+  opacity: 0.5;
+  pointer-events: none;
 }
 
 .slide-toggle label:first-of-type {
-    display: flex;
-    height: 2rem;
-    width: 4rem;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    user-select: none;
-    outline: none;
-    color: #777;
-    background-color: #ddd;
-    border-radius: 3px;
-    transition:
-        background-color 0.25s ease,
-        box-shadow 0.15s ease,
-        color 0.25s ease;
+  display: flex;
+  height: 2rem;
+  width: 4rem;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  user-select: none;
+  outline: none;
+  color: #777;
+  background-color: #ddd;
+  border-radius: 3px;
+  transition:
+    background-color 0.25s ease,
+    box-shadow 0.15s ease,
+    color 0.25s ease;
 }
 
 .slide-toggle label:first-of-type:hover {
-    border-color: #777;
-    box-shadow: 0 0 0 6px rgba(225, 0, 0, 0.15);
+  border-color: #777;
+  box-shadow: 0 0 0 6px rgba(225, 0, 0, 0.15);
 }
 
 .slide-toggle label:first-of-type:after {
-    content: '';
-    position: absolute;
-    top: 3px;
-    bottom: 3px;
-    left: 3px;
-    right: 50%;
-    border-radius: 3px;
-    background-color: #fff;
-    transition: transform 0.25s cubic-bezier(0.6, 0.82, 0, 0.76);
+  content: "";
+  position: absolute;
+  top: 3px;
+  bottom: 3px;
+  left: 3px;
+  right: 50%;
+  border-radius: 3px;
+  background-color: #fff;
+  transition: transform 0.25s cubic-bezier(0.6, 0.82, 0, 0.76);
 }
 
 .slide-toggle label:first-of-type:hover {
-    box-shadow: 0 0 0 6px rgba(225, 0, 0, 0.15);
+  box-shadow: 0 0 0 6px rgba(225, 0, 0, 0.15);
 }
 
 .slide-toggle label:first-of-type div {
-    display: flex;
-    flex: 1;
-    align-items: center;
-    justify-content: center;
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
 }

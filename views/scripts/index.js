@@ -7,6 +7,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
       if (evt.detail.target == htmx.find("#hints-table tbody")) {
         Swal.fire({
           title: "u entered the wrong digits",
+          theme: htmlEl.dataset.theme,
           icon: "warning",
           confirmButtonText: "OK",
         });
@@ -16,6 +17,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
       evt.detail.isError = false;
       Swal.fire({
         title: "i couldnt find your id sorry",
+        theme: htmlEl.dataset.theme,
         icon: "error",
         confirmButtonText: "Return Home",
         allowOutsideClick: false,
@@ -84,14 +86,54 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
 // sweetalert2 notify game result and save record
 async function notifyResult(ans) {
+  let turnstileToken;
   const { value: name } = await Swal.fire({
     title: "you won the game!",
+    theme: htmlEl.dataset.theme,
     icon: "success",
     input: "text",
-    inputLabel: "enter your name to save the result",
     confirmButtonText: "insert",
     showCancelButton: true,
-    text: `the answer is ${ans}`,
+    html: `<p>the answer is ${ans}</p>
+            <p>enter your name to save the result</p>`,
+    didOpen: () => {
+      Swal.disableButtons();
+      Swal.getInput().insertAdjacentHTML(
+        "afterend",
+        `<div id="turnstile-widget">`
+      );
+
+      const captchaSiteKey = document
+        .getElementById("outer")
+        .getAttribute("captcha-site-key");
+      console.log(captchaSiteKey);
+
+      turnstile.render("#turnstile-widget", {
+        sitekey: captchaSiteKey,
+        size: "compact",
+        callback: (token) => {
+          console.debug("challenge success", token);
+          turnstileToken = token;
+          Swal.enableButtons();
+        },
+        "error-callback": (errorCode) => {
+          console.error("challenge error", errorCode);
+          Swal.fire({
+            title: "captcha internal error",
+            theme: htmlEl.dataset.theme,
+            icon: "error",
+            text: "if this issue persists, report to tim pls",
+            confirmButtonText: "close",
+          });
+        },
+        "expired-callback": () => {
+          console.info("token expired");
+        },
+        "timeout-callback": () => {
+          console.info("challenge timed out");
+        },
+      });
+    },
     inputValidator: (value) => {
       if (!value) {
         return "just gimme a name bro";
@@ -110,7 +152,7 @@ async function notifyResult(ans) {
     );
     const attempts = htmx.find("#hints-table tbody").rows.length;
 
-    fetch(window.location.origin + "/save-record", {
+    fetch(window.location.origin + `/save-record?token=${turnstileToken}`, {
       method: "POST",
       body: JSON.stringify({
         digits: digit,
@@ -120,12 +162,30 @@ async function notifyResult(ans) {
       headers: {
         "Content-Type": "application/json",
       },
-    }).catch((err) => console.error(err));
-    document.getElementById("form-container").setAttribute("name", name);
+    })
+      .then(async (resp) => {
+        const msg = await resp.text();
+        if (!resp.ok) {
+          throw new Error(`status: ${resp.status}, msg: ${msg}`);
+        }
+        console.info("record inserted");
+        document.getElementById("form-container").setAttribute("name", name);
+      })
+      .catch((err) => {
+        console.error(err);
+        Swal.fire({
+          title: "failed to save record",
+          theme: htmlEl.dataset.theme,
+          icon: "error",
+          html: `<p>${err}</p><p>if this issue persists, report to tim pls</p>`,
+          confirmButtonText: "close",
+        });
+      });
   } else if (name && existingName && name != existingName) {
     // degenerates spamming my ass
     await Swal.fire({
       title: "dont spam names okay?",
+      theme: htmlEl.dataset.theme,
       icon: "warning",
       confirmButtonText: "im a good cat",
     }).then((result) => {

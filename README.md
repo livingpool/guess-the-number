@@ -12,7 +12,7 @@ For example, if guess = 312 and the answer is 321, the hint would be 1a2b.
 </p>
 
 ### To run this project locally
-- Set IsProduction in ./cmd/main.go to false
+- Set IS_PRODUCTION in ./constants/constants.go to false
 
 - Old school way (Go version 1.22+ is required):
 ```bash

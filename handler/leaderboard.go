@@ -1,16 +1,19 @@
 package handler
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"log/slog"
 	"net/http"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/livingpool/constants"
 	"github.com/livingpool/middleware"
 	"github.com/livingpool/service"
+	"github.com/livingpool/utils"
 	"github.com/livingpool/views"
 )
 
@@ -28,6 +31,25 @@ func NewLeaderboardHandler(r views.TemplatesRepository, l service.LeaderboardRep
 
 func (h *LeaderboardHandler) SaveRecord(w http.ResponseWriter, r *http.Request) {
 	reqId := r.Context().Value(middleware.RequestIdKey).(string)
+
+	token := r.URL.Query().Get("token")
+	if token == "" {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte("missing token in query param"))
+		slog.Warn("save record request did not carry an captcha token")
+		return
+	}
+
+	captchaCtx, cancel := context.WithTimeout(r.Context(), 5*time.Second)
+	defer cancel()
+
+	if err := utils.ValidateCaptcha(captchaCtx, token); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write(fmt.Appendf([]byte{}, "failed to validate captcha: %v", err))
+		slog.Error("validate captcha failed", "token", token, "err", err.Error())
+		return
+	}
+
 	var record service.Record
 
 	dec := json.NewDecoder(r.Body)
@@ -35,6 +57,7 @@ func (h *LeaderboardHandler) SaveRecord(w http.ResponseWriter, r *http.Request) 
 
 	if err := dec.Decode(&record); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte("failed to decode request body"))
 		slog.Error("decode json failed", "reqId", reqId, "err", err.Error())
 		return
 	}

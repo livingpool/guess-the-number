@@ -127,6 +127,12 @@ form button:focus,
   cursor: pointer;
 }
 
+#turnstile-widget {
+  display: flex;
+  justify-content: center;
+  margin: var(--swal2-actions-margin);
+}
+
 @media screen and (max-width: 600px) {
   .inner {
     width: 300px;

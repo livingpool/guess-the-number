@@ -3,11 +3,12 @@ package constants
 import "sync"
 
 const (
-	PLAYER_POOL_CAP      int = 100
-	DIGIT_LOWER_LIMIT    int = 1
-	DIGIT_UPPER_LIMIT    int = 8
-	MAX_ROWS_DISPLAYED   int = 10
-	LEADERBOARD_MAX_ROWS int = 100 // not used for now
+	IS_PRODUCTION        bool = false
+	PLAYER_POOL_CAP      int  = 100
+	DIGIT_LOWER_LIMIT    int  = 1
+	DIGIT_UPPER_LIMIT    int  = 8
+	MAX_ROWS_DISPLAYED   int  = 10
+	LEADERBOARD_MAX_ROWS int  = 100 // not used for now
 )
 
 type AutoInc struct {

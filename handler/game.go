@@ -5,6 +5,7 @@ import (
 	"math"
 	"math/rand"
 	"net/http"
+	"os"
 	"strconv"
 	"strings"
 	"time"
@@ -30,8 +31,20 @@ func NewGameHandler(r views.TemplatesRepository, p service.PlayerPoolRepository,
 	}
 }
 
+type HomeTmplData struct {
+	CaptchaSiteKey string
+	Digit          string
+	Error          string
+}
+
 func (h *GameHandler) Home(w http.ResponseWriter, r *http.Request) {
-	h.renderer.Render(w, "base", nil)
+	siteKey := os.Getenv("CLOUDFLARE_TURNSTILE_SITE_KEY")
+	if !constants.IS_PRODUCTION || siteKey == "" {
+		siteKey = "1x00000000000000000000AA"
+	}
+	if err := h.renderer.Render(w, "base", HomeTmplData{CaptchaSiteKey: siteKey}); err != nil {
+		slog.Error("render base error", "err", err.Error())
+	}
 }
 
 func (h *GameHandler) ReturnHome(w http.ResponseWriter, r *http.Request) {

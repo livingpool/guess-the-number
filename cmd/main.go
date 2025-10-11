@@ -11,11 +11,10 @@ import (
 
 	"github.com/joho/godotenv"
 	"github.com/livingpool/config"
+	"github.com/livingpool/constants"
 	"github.com/livingpool/middleware"
 	"github.com/livingpool/router"
 )
-
-const IsProduction = false
 
 func main() {
 	rootCtx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
@@ -39,7 +38,7 @@ func main() {
 		middleware.Logging(logger, loggingConfig),
 	)
 
-	conf, err := config.Setup(IsProduction)
+	conf, err := config.Setup(constants.IS_PRODUCTION)
 	if err != nil {
 		slog.Error("error setting up config", "error", err)
 	}
